@@ -65,13 +65,8 @@
         <div class="social_wraper">
 
           <ul class="social">
-            <li><a href="#" target="_blank" class="fa fa-facebook facebook"></a></li>
+            <li><a href="https://www.facebook.com/subhapradabuilders/" target="_blank" class="fa fa-facebook facebook"></a></li>
             <li><a href="#" target="_blank" class="fa fa-twitter twitter"></a></li>
-            <li class="social_blinker">
-              <i class="fa fa-genderless"></i>
-              <i class="fa fa-genderless"></i>
-              <i class="fa fa-genderless"></i>
-            </li>
             <li><a href="#" target="_blank" class="fa fa-google-plus google-plus"></a></li>
           </ul>
         </div>
@@ -119,21 +114,56 @@
       <h2 class="sub">Get The Most Reasonable rates. JOIN US.</h2>
     </div>
     <div class="fast-subscribe-form text-center">
-      <form class="mailchimp mar-cen">
+      <?php
+        if (isset($_POST['submit'])){
+          $servername = "localhost";
+          $username = "root";
+          $password = "";
+          $dbname = "SubhaPrada";
+
+          // Create connection
+          $conn = new mysqli($servername, $username, $password, $dbname);
+          // Check connection
+
+          if ($conn->connect_error) {
+              die("Connection failed: " . $conn->connect_error);
+          }
+
+          if(isset($_POST['name']))
+            $name = $_POST['name'];
+          else $name = null;
+
+          if(isset($_POST['email']))
+            $email = $_POST['email'];
+          else $email = null;
+
+          $stmt = $conn->prepare("INSERT INTO newsletters (name, email) VALUES (?, ?)");
+          $stmt->bind_param('ss', $name, $email);
+
+          $stmt->execute();
+
+          echo "Thanks for the details!!! We will contact you shortly.";
+
+          $stmt->close();
+          $conn->close();
+
+        }
+
+      ?>
+      <form class="mailchimp mar-cen" action="" method="post">
         <div class="input-group mar-bottom-1">
 
-          <input type="text" name="name" class="form-control input-box" placeholder="Your Name" required>
-          <input type="email" name="email" class="form-control input-box" placeholder="Email Address" id="subscriber-email1">
+          <input type="text" id="name" name="name" class="form-control input-box" placeholder="Your Name" required>
+          <input type="email" id="email" name="email" class="form-control input-box" placeholder="Email Address">
           <span class="input-group-btn input-box">
-            <input class="btn btn-primary" type="submit" value="Subscribe »">
+            <input class="btn btn-primary" type="submit" id="submit" name="submit" value="Subscribe »">
           </span>
         </div>
+      </form>
         <p>
           * We don’t share any of your personal information with anyone<br>
            It's just a way to be connected. For more information <a href="#contact" class="goto">Contact Us</a>.
         </p>
-
-      </form>
     </div>
   </div>
 
@@ -608,26 +638,42 @@
             // Create connection
             $conn = new mysqli($servername, $username, $password, $dbname);
             // Check connection
+
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
-            } 
-
-            $sql = "INSERT INTO Visitors (name, email, subject, message)
-            VALUES ('John', 'a@b.com', 'this is the subject', 'this is the message')";
-
-            if ($conn->query($sql) === TRUE) {
-                echo "New record created successfully";
-            } else {
-                echo "Error: " . $sql . "<br>" . $conn->error;
             }
 
+            if(isset($_POST['contact-name']))
+              $name = $_POST['contact-name'];
+            else $name = null;
+
+            if(isset($_POST['contact-email']))
+              $email = $_POST['contact-email'];
+            else $email = null;
+
+            if(isset($_POST['contact-subject']))
+              $subject = $_POST['contact-subject'];
+            else $subject = null;
+
+            if(isset($_POST['contact-message']))
+              $message = $_POST['contact-message'];
+            else $message = null;
+
+            $stmt = $conn->prepare("INSERT INTO Visitors (name, email, subject, message) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param('ssss', $name, $email, $subject, $message);
+
+            $stmt->execute();
+
+            echo "Query sent. We will contact you asap";
+
+            $stmt->close();
             $conn->close();
 
           }
-            
+
         ?>
           <!-- FORM -->
-          <form id="contact-form" class="contact-form mar-z" role="form" action="index.php" method="post">
+          <form id="contact-form" class="contact-form mar-z" role="form" action="" method="post">
             <div class="field-wrapper form-group col-md-6">
               <div class="help-block with-errors form-tooltip"></div>
               <input class="form-control input-box" id="contact-name" type="text" name="contact-name" placeholder="Your Name" data-error="Write Down Your Name Please !" required>
