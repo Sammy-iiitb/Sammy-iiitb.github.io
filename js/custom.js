@@ -66,12 +66,12 @@ $('.main-menu .nav a').on('click', function(){
      Main Menu Social blinking effect
    ========================================= */
 
-var SocBlink = $('.main-menu .social_blinker'),
+/*var SocBlink = $('.main-menu .social_blinker'),
 MenuSoc = $('.main-menu .social');
 SocBlink.on('click', function() {
   $(this).toggleClass('hidden');
   MenuSoc.toggleClass('appear');
-});
+});*/
 
 
 MenuSoc.mouseleave(function() {
@@ -380,33 +380,6 @@ function mailchimpCallback(resp) {
 $('.contact-form, .registration').validator({
   disable:false
 });
-
-$("#contact-form").submit(function (e) {
-  e.preventDefault();
-  var name = $("#contact-name").val();
-  var email = $("#contact-email").val();
-  var subject = $("#contact-subject").val();
-  var message = $("#contact-message").val();
-  var dataString = 'name=' + name + '&email=' + email + '&subject=' + subject + '&message=' + message;
-  $.ajax({
-    type: "POST",
-    url: "sendmail/mail.php",
-    data: dataString,
-    success: function () {
-      $('.form-success').css({"opacity" : "1"});
-      $('.form-error').css({"opacity": "0"});
-    },
-    error:function(){
-      $('.form-error').css({"opacity" : "1"});
-      $('.form-success').css({"opacity": "0"});
-    }
-  });
-
-
-});
-
-
-
 
 /*===========================================================================
         Bootstrap Internet Explorer 10 in Windows 8 and Windows Phone 8 FIX
